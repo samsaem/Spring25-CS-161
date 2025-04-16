@@ -52,7 +52,7 @@ def DFS(TREE):
 
 # ******* QUESTION 3 *******
 def DFID_helper(TREE,depth):
-    # ensure that depth doesn't go less than 0
+    # base case: ensure that depth doesn't go less than 0
     if depth < 0:
         return []
     # TREE only has a single-node when it's a non-tuple object
@@ -60,7 +60,7 @@ def DFID_helper(TREE,depth):
         return (TREE,)
 
     result = []
-    # use reversed built-in function to process right-to-left
+    # use reversed built-in function to process right-to-left and recursively run reaching base case
     for subtree in reversed(TREE):
         result.extend(DFID_helper(subtree, depth - 1))
     return result
@@ -69,10 +69,12 @@ def DFID_helper(TREE,depth):
 # Argument 2: D (depth)
 # Return: a tuple of leaf nodes in the order that they visited from right-to-left depth-first iterative-deepening search
 def DFID(TREE,D):
-    nodes = []
+    visited_nodes = []
+    # searching depth from 0 to D
     for d in range(D + 1):
-        nodes.extend(DFID_helper(TREE, d))
-    return tuple(nodes)
+        # add to end of list of visited nodes
+        visited_nodes.extend(DFID_helper(TREE, d))
+    return tuple(visited_nodes)
 
 # print(DFID("ROOT", 0))
 # print(DFID(((("L", "E"), "F"), "T"), 3))
@@ -106,13 +108,14 @@ def NEXT_STATE(S, A):
     else:
         return []
 
-    new_state = (nh, nb, nd, np)
     # dog with baby, homer not with baby
     if nd == nb and nh != nb:
         return []
     # poison with baby, homer not with baby:
     if np == nb and nh != nb:
         return []
+
+    new_state = (nh, nb, nd, np)
 
     return [new_state]
 
@@ -148,9 +151,3 @@ def DFS_SOL(S, PATH):
     # generate next state
     next_state = SUCC_FN(S)
     return MULT_DFS(next_state, PATH + [S])
-
-
-
-
-
-
